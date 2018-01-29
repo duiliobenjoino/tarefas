@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/webjars/font-awesome/css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/estilos.css}" />
+
+        <title>Nova Tarefa</title>
+
+    </head>
+    <body>
+
+        <div class="container corpo center-block ">
+            <form method="POST" th:object="${tarefa}" th:action="@{/tarefas/cadastro}">
+                <div class="topo">
+                    <div class="titulo">:: <span th:if="*{id}==null">Registrar tarefa</span><span th:if="*{id}!=null">Atualizar tarefa</span></div>
+                    <div class="navegacao">
+                        <a th:href="@{/tarefas/}" class="btn btn-default" role="button">listar tarefas</a>
+                    </div>
+                </div>
+                <input id="id" name="id" type="hidden" th:field="*{id}" />
+                <input id="finalizado" name="finalizado" type="hidden" value="false" />
+
+                <div class="form-group">
+                    <label for="descricao">Descrição</label><br/>
+                    <input id="descricao" name="descricao" class="form-control" type="text" th:field="*{descricao}" autofocus="true" />
+                </div>
+
+                <button type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Clique aqui para registrar uma nova tarefa">Salvar</button>
+                <div class="alert alert-success" role="alert" th:if="${not #strings.isEmpty(mensagem)}">
+                    <span th:text="${mensagem}"></span>
+                </div>
+                <div class="alert alert-danger alert-dismissible" role="alert" th:if="${#fields.hasAnyErrors()}">
+                    <button type="button" class="close" data-dismiss="alert" ><span aria-hidden="true">&times;</span></button>
+                    <th:block th:each="detailedError : ${#fields.detailedErrors()}">
+                        <div><i class="fa  fa-exclamation-circle"></i> <span th:text="${detailedError.message}"></span></div>
+                    </th:block>
+                </div>
+            </form>
+        </div>
+
+        <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>    
+        <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" th:src="@{/js/geral.js}"></script>
+    </body>
+</html>

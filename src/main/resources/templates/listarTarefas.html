@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <link rel="stylesheet" href="/webjars/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="/webjars/font-awesome/css/font-awesome.min.css"/>
+        <link rel="stylesheet" type="text/css" th:href="@{/css/estilos.css}" />
+
+        <title>Tarefas</title>
+
+    </head>
+    <body>
+
+        <div class="container corpo center-block ">
+            <div class="topo">
+                <div class="titulo">
+                    :: Lista de tarefas 
+                    <select id="filtro">
+                        <option value="1" th:selected="${filtro == 1}"> finalizadas</option>
+                        <option value="2" th:selected="${filtro == 2}"> pendentes</option>
+                        <option value="3" th:selected="${filtro == 3}"> registradas</option>
+                    </select>
+                </div>
+                <div class="navegacao">
+                    <a th:href="@{/tarefas/nova}" class="btn btn-default">Inserir nova</a>
+                </div>
+            </div>
+
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <a th:href="${pagina.urlOrdenada('id')}" th:remove="${pagina.vazia} ? tag">
+                                <span>Cód.</span>
+                                <span class="dropup" th:remove="${pagina.descendente('id')} ? tag" th:if="${pagina.ordenada('id')}"><span class="caret"></span></span>
+                            </a>
+                        </th>
+                        <th scope="col">
+                            <a th:href="${pagina.urlOrdenada('descricao')}" th:remove="${pagina.vazia} ? tag">
+                                <span>Descrição</span>
+                                <span class="dropup" th:remove="${pagina.descendente('descricao')} ? tag" th:if="${pagina.ordenada('descricao')}"><span class="caret"></span></span>
+                            </a>
+                        </th>
+                        <th scope="col" class="text-center">Situação</th>
+                        <th scope="col" class="text-center">Opções</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tarefa : ${pagina.conteudo}">
+                        <th th:text="${tarefa.id}"></th>
+                        <td th:text="${tarefa.descricao}"></td>
+                        <td class="situacao"><span class="btn btn-xs" th:text="${tarefa.situacao}" th:classappend="${tarefa.finalizado} ? btn-success : btn-warning"></span></td>
+                        <td class="opcoes">
+                            <span th:if="${not tarefa.finalizado}">
+                                <a class="js-finalizar" title="Finalizar" href="#" th:attr="data-id=${tarefa.id}, data-url=@{/tarefas/finalizar/}" data-toggle="tooltip"> 
+                                    <i class="fa fa-check"></i>
+                                </a>
+                                <a title="Editar" th:href="@{/tarefas/cadastro/} + ${tarefa.id}" data-toggle="tooltip"> 
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                            </span>
+                            <a class="js-excluir" title="Excluir" href="#" th:attr="data-id=${tarefa.id}, data-url=@{/tarefas/}" data-toggle="tooltip">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        
+            <div class="col-sm-12 text-center" th:if="${not pagina.vazia}">
+                <nav>
+                    <ul class="pagination  pagination-sm" th:with="paginaAtual=${pagina.atual}">
+                        <li th:class="${pagina.primeira} ? disabled">
+                            <a th:href="${pagina.urlParaPagina(paginaAtual - 1)}" th:remove="${pagina.primeira} ? tag"><span>&laquo;</span></a>
+                        </li>
+                        <th:block th:each="p : ${#numbers.sequence(1, pagina.total)}" th:with="numeroPagina=${p - 1}">
+                            <li th:class="${paginaAtual == numeroPagina} ? active">
+                                <a th:href="${pagina.urlParaPagina(numeroPagina)}" th:text="${p}"></a>
+                            </li>
+                        </th:block>
+
+                        <li th:class="${pagina.ultima} ? disabled">
+                            <a th:href="${pagina.urlParaPagina(paginaAtual + 1)}" th:remove="${pagina.ultima} ? tag"><span>&raquo;</span></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <script src="/webjars/jquery/3.2.1/jquery.min.js"></script>    
+        <script src="/webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" th:src="@{/js/geral.js}"></script>
+    </body>
+</html>
